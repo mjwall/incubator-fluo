@@ -16,9 +16,7 @@
 package org.apache.fluo.accumulo.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,22 +96,23 @@ public class ByteArrayUtil {
    * @param listOfBytes Bytes objects to concatenate
    * @return Bytes
    */
-  public static final byte[] concat(Bytes... listOfBytes) {
-    try {
-      // TODO calculate exact array size needed
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      DataOutputStream dos = new DataOutputStream(baos);
+  public static final byte[] concat(Bytes first, Bytes second, Bytes... listOfBytes) {
+    byte[] ret = new byte[0];
+    return null;
+  }
 
-      for (Bytes b : listOfBytes) {
-        WritableUtils.writeVInt(dos, b.length());
-        b.writeTo(dos);
-      }
-
-      dos.close();
-      return baos.toByteArray();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  /**
+   * Concatenates 2 Bytes objects to create a byte array
+   *
+   * @param first Bytes object 1
+   * @param second Bytes object 2
+   * @return byte[]
+   */
+  public static final byte[] concat(Bytes first, Bytes second) {
+    byte[] both = new byte[first.length() + second.length()];
+    first.copyTo(both, 0);
+    second.copyTo(0, second.length(), both, first.length());
+    return both;
   }
 
   public static final List<Bytes> split(byte[] b) {
